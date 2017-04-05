@@ -296,6 +296,13 @@ function copySync (src, dest, options) {
       copyFileSync(src, dest, options.clobber)
     }
   } else if (stats.isDirectory()) {
+
+    // don't copy transitive dependencies to target path
+    if(dest.endsWith('/node_modules')){
+      console.error('skipping copy for ' + dest);
+      return;
+    }
+
     if (!fs.existsSync(dest)) mkdirsSync(dest)
     var contents = fs.readdirSync(src)
     contents.forEach(function (content) {
